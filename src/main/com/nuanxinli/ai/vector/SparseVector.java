@@ -13,12 +13,12 @@ import java.util.function.BiFunction;
 import org.apache.log4j.Logger;
 
 /**
- * 稀疏向量
+ * 稀疏向量-以字符串作为向量维度的标识
  * Sparse Vector
  * @author 宋辉(Song Hui)
  * 
  */
-public class SparseVector {
+public class SparseVector implements Vector{
 
 	// 双值计算器回调方法,用于在合并向量的时候, 让外部调用指定如何合并
 	//a callback function, to calculate two values when mergeing vectors
@@ -85,7 +85,7 @@ public class SparseVector {
 	 * @param divName 维度名称 - division name
 	 * @param divValue 维度值 - division value
 	 */
-	public void setDiv(String divName, double divValue)
+	public void setDivValue(String divName, double divValue)
 	{
 		divMap.put(divName, divValue);
 		if (lengthSquareCache!=null){
@@ -179,7 +179,7 @@ public class SparseVector {
 	{
 		SparseVector product = new SparseVector();
 		for (Map.Entry<String,Double> entry : divMap.entrySet()){
-			product.setDiv(entry.getKey(), entry.getValue()*factor);
+			product.setDivValue(entry.getKey(), entry.getValue()*factor);
 		}
 		return product;
 	}
@@ -192,7 +192,7 @@ public class SparseVector {
 	public void multiplySelf(double factor)
 	{
 		for (Map.Entry<String,Double> entry : divMap.entrySet()){
-			this.setDiv(entry.getKey(), entry.getValue()*factor);
+			this.setDivValue(entry.getKey(), entry.getValue()*factor);
 		}
 	}
 	
@@ -206,7 +206,7 @@ public class SparseVector {
 	{
 		SparseVector quotient = new SparseVector();
 		for (Map.Entry<String,Double> entry : divMap.entrySet()){
-			quotient.setDiv(entry.getKey(), entry.getValue()/divisor);
+			quotient.setDivValue(entry.getKey(), entry.getValue()/divisor);
 		}
 		return quotient;
 	}
@@ -219,7 +219,7 @@ public class SparseVector {
 	public void divideSelf(double divisor)
 	{
 		for (Map.Entry<String,Double> entry : divMap.entrySet()){
-			this.setDiv(entry.getKey(), entry.getValue()/divisor);
+			this.setDivValue(entry.getKey(), entry.getValue()/divisor);
 		}
 	}
 
@@ -298,7 +298,7 @@ public class SparseVector {
 			String divName = entry.getKey();
 			Double divValue = entry.getValue();
 			Double originValue = this.getDivValue(divName);
-			this.setDiv(divName, (originValue==null)? divValue: calculateFunc.calculate(originValue,divValue));
+			this.setDivValue(divName, (originValue==null)? divValue: calculateFunc.calculate(originValue,divValue));
 		}
 	}
 	
